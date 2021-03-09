@@ -1,5 +1,5 @@
 /*//////////////////////////////////////////////////
-//  © 2021, created by Brendan Scott  //  v. 0.7  //
+//  © 2021, created by Brendan Scott  //  v. 0.9  //
 //////////////////////////////////////////////////////////////
 //  Include this file with <script src="NNet.js"></script>  // 
 ////////////////////////////////////////////////////////////*/
@@ -177,6 +177,7 @@ class NeuralNetwork {
 		let output = Matrix.multiply(this.weights_ho, hiddenV);
 		output.add(this.bias_o);
 		output.map(sigmoid);
+		
 		return output.toArray();
 	}
 	
