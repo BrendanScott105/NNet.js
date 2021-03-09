@@ -1,8 +1,14 @@
 /*//////////////////////////////////////////////////
-//  © 2021, created by Brendan Scott  //  v. 0.6  //
+//  © 2021, created by Brendan Scott  //  v. 0.7  //
 //////////////////////////////////////////////////////////////
 //  Include this file with <script src="NNet.js"></script>  // 
 ////////////////////////////////////////////////////////////*/
+
+// Sigmoid
+
+function sigmoid(x) {
+	return 1 / (1 + Math.exp(-x))
+}
 
 // Simple matrix math class
 
@@ -19,10 +25,29 @@ class Matrix {
 			}
 		}
 	}
+	
+	static fromArray(arr){
+		let m = new Matrix(arr.length, 1);
+		for (let i = 0; i < arr.length; i++){
+			m.data[i][0] = arr[i];
+		}
+		return m;
+	}
+	
+	toArray() {
+		let arr = [];
+		for (let i = 0; i < this.rows; i++) {
+			for (let j = 0; j < this.cols; j++) {
+			arr.push(this.data[i][j]);
+			}
+		}
+		return arr;
+	}
+	
 	randomize() {
 		for (let i = 0; i < this.rows; i++) {
 			for (let j = 0; j < this.cols; j++) {
-				this.data[i][j] = Math.floor(Math.random()*10)
+				this.data[i][j] = Math.random() * 2 - 1;
 			}
 		}
 	}
@@ -116,10 +141,12 @@ class Neuron {
 		return this.activate(sum);
 	}
 	activate(sum) {
-		if (sum > 0) return 1;
+		if (sum >= 0) return 1;
 		else return -1;
 	}
-	getWeights() {return this.weights;}
+	getWeights() {
+		return this.weights;
+	}
 }
 
 // Neural network class
@@ -129,10 +156,31 @@ class NeuralNetwork {
 		this.input_nodes = inputN;
 		this.hidden_nodes = hiddenN;
 		this.output_nodes = outputN;
+		
+		this.weights_ih = new Matrix(this.hidden_nodes, this.input_nodes);
+		this.weights_ho = new Matrix(this.output_nodes, this.hidden_nodes);
+		this.weights_ih.randomize();
+		this.weights_ho.randomize();
+		
+		this.bias_h = new Matrix(this.hidden_nodes, 1);
+		this.bias_o = new Matrix(this.output_nodes, 1);
+		this.bias_h.randomize();
+		this.bias_o.randomize();
 	}
 	
-	guess(input) {
+	guess(input_array) {
+		let input = Matrix.fromArray(input_array);
+		let hiddenV = Matrix.multiply(this.weights_ih, input);
+		hiddenV.add(this.bias_h);
+		hiddenV.map(sigmoid);
 		
-		return guess;
+		let output = Matrix.multiply(this.weights_ho, hiddenV);
+		output.add(this.bias_o);
+		output.map(sigmoid);
+		return output.toArray();
+	}
+	
+	train(inputs, answer) {
+		
 	}
 }
