@@ -1,0 +1,49 @@
+<canvas id="Canvas" width="400" height="400"></canvas>
+<script src="NNet.js"></script>
+<script>
+var c = document.getElementById("Canvas");
+var ctx = c.getContext("2d");
+nn = new NeuralNetwork(2,2,1);
+for (var i = 0; i < 100000; i++) {
+	var a = Math.floor(Math.random()*4)
+	if (a == 0) {
+	nn.train([0,0], [0])
+	}
+	if (a == 1) {
+	nn.train([0,1], [1])
+	}
+	if (a == 2) {
+	nn.train([1,0], [1])
+	}
+	if (a == 3) {
+	nn.train([1,1], [0])
+	}
+}
+for (X = 0; X < 400; X++) {
+	for (Y = 0; Y < 400; Y++) {
+		t = nn.guess([X/400, Y/400])
+		ctx.fillStyle = `rgb(${t*255}, ${t*255}, ${t*255})`
+		ctx.fillRect(X,Y,1,1);
+	}
+}
+</script>
+<table style="height: 87px; width: 98px;" border="border: 1px solid black"> 
+<tbody>
+<tr>
+<td style="width: 43px;">&nbsp;XOR</td>
+<td style="width: 31px;">&nbsp;0</td>
+<td style="width: 30px;">&nbsp;1</td>
+</tr>
+<tr>
+<td style="width: 43px;">&nbsp;0</td>
+<td style="width: 31px;">&nbsp;0</td>
+<td style="width: 30px;">&nbsp;1</td>
+</tr>
+<tr>
+<td style="width: 43px;">&nbsp;1</td>
+<td style="width: 31px;">&nbsp;1</td>
+<td style="width: 30px;">&nbsp;0</td>
+</tr>
+</tbody>
+</table>
+Black represents 0 while white represents 1 | May require refresh
